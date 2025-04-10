@@ -4,6 +4,7 @@
 #! "could" or "(optional)" means you can get extra marks for doing it, but you don't lose marks for not doing it
 
 from enum import Enum
+import sys
 
 #! Your program could set these flags on command line
 WW = False
@@ -14,7 +15,20 @@ DBG = False # Debug info
 TRACE = 0
 
 #!! Your program must take the path to an abitrary `.tal` file on command line and
+programFile=sys.argv[1]
+
+if len(sys.argv) > 1:
+    if "V" in sys.argv[1:]:
+        V = True
+    if "VV" in sys.argv[1:]:
+        VV = True
+    if "DBG" in sys.argv[1:]:
+        DBG = True
+    
+print(WW, V, VV, DBG)
 #!! read the program text
+print(programFile)
+exit()
 
 programText = """
 |0100
@@ -70,26 +84,26 @@ def parseToken(tokenStr):
         val = tokenStr[1:]
         return (T.ABSREF,val,2)
 #!! Handle relative references `,&`
-    # elif tokenStr[0] == ...
-    #     ...
-    #     return (T.RELREF,val,1)
+    elif tokenStr[0:2] == ',&':
+        val = tokenStr[2:]
+        return (T.RELREF,val,1)
     elif tokenStr[0] == '@':
         val = tokenStr[1:]
         return (T.LABEL,val)
 #!! Handle relative labels `&`
-    # elif tokenStr[0] == ...
-    #     ...
-    #     return (...)
+    elif tokenStr[0] == '&':
+        val = tokenStr[1:]
+        return (T.LABEL,val)
     elif tokenStr == '|0100':
         return (T.MAIN,)
 #! Handle absolute padding (optional)
-    # elif tokenStr[0] == ...
-    #     ...
-    #     return (...)
+    elif tokenStr[0] == '|':
+        val = tokenStr[1:]
+        return (T.ABSPAD,val,2)
 #! Handle relative padding
-    # elif tokenStr[0] == ...
-    #     ...
-    #     return (...)
+    elif tokenStr[0] == '$':
+        val = tokenStr[1:]
+        return (T.RELPAD,val,1)
     elif tokenStr[0].isupper():
         # Any token string starting with an uppercase letter is considered an instruction
         if len(tokenStr) == 3:
@@ -114,7 +128,6 @@ def parseToken(tokenStr):
     else:
         # we assume this is a 'raw' byte or short
         return (T.RAW,int(tokenStr,16))
-
 
 # These are the actions related to the various Uxn instructions
 
