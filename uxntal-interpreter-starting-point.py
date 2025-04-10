@@ -27,8 +27,8 @@ if len(sys.argv) > 1:
     
 print(WW, V, VV, DBG)
 #!! read the program text
-print(programFile)
-exit()
+
+#todo after rest working
 
 programText = """
 |0100
@@ -375,7 +375,12 @@ def populateMemoryAndBuildSymbolTable(tokens,uxn):
 def resolveSymbols(uxn):
     global TRACE
     TRACE=TRACE+1    
-    #!  ...
+    for token in uxn.memory:
+        if token[0] == T.ABSPAD or token[0] == T.RELREF:
+            address = uxn.symbolTable[token[1]]
+            newToken = (T.LIT, token[1], token[2])
+            uxn.memory[address] = newToken
+
 
 # Running the program mean setting the program counter `uxn.progCounter` to the address of the first token;
 #  - read the token from memory at that address
