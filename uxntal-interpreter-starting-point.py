@@ -217,6 +217,8 @@ def mul(args,sz,uxn):
     return args[0] * args[1]
 def div(args,sz,uxn):
     return args[0] // args[1]
+def inc(args,sz,uxn):
+    return args[0] + 1
 
 #!! Implement EQU, NEQ, LTH, GTH (similar to `ADD`)
 def equ(args,sz,uxn):
@@ -231,6 +233,13 @@ def gth(args,sz,uxn):
 callInstr = {
 #!! Add SUB, MUL, DIV, INC; EQU, NEQ, LTH, GTH
     'ADD' : (add,2,True),
+    'SUB' : (sub,2,True),
+    'MUL' : (mul,2,True),
+    'DIV' : (div,2,True),
+    'EQU' : (equ,2,True),
+    'NEQ' : (neq,2,True),
+    'LTH' : (lth,2,True),
+    'GTH' : (gth,2,True),
     'DEO' : (lambda args,sz,uxn : print(chr(args[1]),end=''),2,False),
     'JSR' : (call,1,False),
     'JMP' : (jump,1,False),
@@ -241,7 +250,9 @@ callInstr = {
     'DUP' : (dup,0,False),
     'SWP' : (swap,0,False),
     'OVR' : (over,0,False),
-    'NIP' : (nip,0,False)
+    'NIP' : (nip,0,False),
+    'POP' : (pop,0,False),
+    'ROT' : (rot,0,False)
 #!! Add POP, ROT
 
 }
