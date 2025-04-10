@@ -171,6 +171,4 @@ cython_debug/
 .pypirc
 
 # project specific
-output.tal
-output.rom
-output.rom.sym
+test.py
