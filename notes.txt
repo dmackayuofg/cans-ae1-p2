@@ -1,0 +1,1 @@
+go back and make every stack instruction take 2 bytes using sz variable. currently assumes 1byte.

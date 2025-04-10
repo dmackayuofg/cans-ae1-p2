@@ -160,8 +160,8 @@ def stash(rs,sz,uxn):
     uxn.stacks[1-rs].append(uxn.stacks[rs].pop())
 
 #!! Implement POP (look at `swap`)
-#! def pop(rs,sz,uxn):
-    #! ...
+def pop(rs,sz,uxn):
+    uxn.stacks[rs].pop()
 
 # SWP
 def swap(rs,sz,uxn):
@@ -189,8 +189,13 @@ def nip(rs,sz,uxn): # a b -> b
             exit()
 
 #!! Implement ROT (look at `swap`)
-#! def rot(rs,sz,uxn): # a b c -> b c a
-    #! ...
+def rot(rs,sz,uxn): # a b c -> b c a
+    c = uxn.stacks[rs].pop()
+    b = uxn.stacks[rs].pop()
+    a = uxn.stacks[rs].pop()
+    uxn.stacks[rs].append(b)
+    uxn.stacks[rs].append(c)
+    uxn.stacks[rs].append(a)
 
 def dup(rs,sz,uxn):
         a = uxn.stacks[rs][-1]
