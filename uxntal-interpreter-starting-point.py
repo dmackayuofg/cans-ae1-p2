@@ -219,14 +219,14 @@ def div(args,sz,uxn):
     return args[0] // args[1]
 
 #!! Implement EQU, NEQ, LTH, GTH (similar to `ADD`)
-#! def equ(args,sz,uxn):
-#!    ...
-# def neq(args,sz,uxn):
-#!    ...
-# def lth(args,sz,uxn):
-#!    ...
-# def gth(args,sz,uxn):
-#!    ...
+def equ(args,sz,uxn):
+    return args[0] == args[1]
+def neq(args,sz,uxn):
+    return args[0] != args[1]
+def lth(args,sz,uxn):
+    return args[0] < args[1]
+def gth(args,sz,uxn):
+    return args[0] > args[1]
 
 callInstr = {
 #!! Add SUB, MUL, DIV, INC; EQU, NEQ, LTH, GTH
