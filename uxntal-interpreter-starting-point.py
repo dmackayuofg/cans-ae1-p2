@@ -211,12 +211,12 @@ def add(args,sz,uxn):
     return args[0] + args[1]
 
 #!! Implement SUB, MUL, DIV, INC (similar to `ADD`)
-#! def sub(args,sz,uxn):
-#!    ...
-# def mul(args,sz,uxn):
-#!    ...
-# def div(args,sz,uxn):
-#!    ...
+def sub(args,sz,uxn):
+    return args[0] - args[1]
+def mul(args,sz,uxn):
+    return args[0] * args[1]
+def div(args,sz,uxn):
+    return args[0] // args[1]
 
 #!! Implement EQU, NEQ, LTH, GTH (similar to `ADD`)
 #! def equ(args,sz,uxn):
