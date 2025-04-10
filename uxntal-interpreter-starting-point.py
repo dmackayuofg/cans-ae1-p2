@@ -383,24 +383,26 @@ def resolveSymbols(uxn):
 # - otherwise it is an instruction and it is executed using `executeInstr(token,uxn)`
 # - then we increment the program counter
 #!! Implement the above functionality
-def runProgram(uxn):  
+def runProgram(uxn):
     if VV:
         print('*** RUNNING ***')
     uxn.progCounter = 0x100 # all programs must start at 0x100
     while True:
 #!! read the token from memory at that address
-        #! token = ...
+        token = uxn.memory[uxn.progCounter]
         if DBG:
             print('PC:',uxn.progCounter,' TOKEN:',token)
         #! You can use an if/elif if you prefer; there are only two cases (and an optional third to catch potential errors)
         #! because the program at this point consists entirely of instructions and literals
-        #! match ...:
-        #!     case ...:
-        #!         ...
-        #!     case ...:
-        #!         ...
+        match token[0]:
+            case T.LIT:
+                uxn.stacks[0].append(token[1])
+            case T() if token[0] in T:
+                executeInstr(token,uxn)
+            case _:
+                print("error")
 #!! Increment the program counter
-        #! ...
+        uxn.progCounter = 0x1
         if DBG:
             print('(WS,RS):',uxn.stacks)
 
