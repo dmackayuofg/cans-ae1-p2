@@ -317,18 +317,30 @@ def executeInstr(token,uxn):
 #! You must remove any comments first, I suggest you use a helper function stripComments
 #! which should return the program text without comments
 def stripComments(programText):
-    #! ...
-    return [] #! replace this with the actual code
+    split = programText.split(" ")
+    split = "\n".join(split)
+    split = split.split("\n")
+    while "" in split:
+        split.remove("")
+    while "(" in split:
+        for i, token in enumerate(split):
+            if token == "(":
+                split.pop(i)
+                while split[i] != ")":
+                    split.pop(i)
+                split.pop(i)
+                break
+    return " ".join(split)
+
 #! `tokenStrings` is a list of all tokens as strings
 def tokeniseProgramText(programText):
-    #! ...
-    return [] #! replace this with the actual code
+    return programText.split(" ")
 
 def populateTokens(tokensWithStrings):
     global TRACE
-    TRACE=TRACE+1    
+    TRACE=TRACE+1
+    return list(tokensWithStrings)
     tokens=[]
-    #! ...
     return tokens
 
 # This is the first pass of the assembly process
