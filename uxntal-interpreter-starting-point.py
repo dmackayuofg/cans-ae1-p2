@@ -10,11 +10,12 @@ import sys
 WW = False
 V = False # Verbose, explain a bit what happens
 VV = False # More verbose, explain in more detail what happens
-DBG = False # Debug info
+DBG = True # Debug info
 
 TRACE = 0
 
 #!! Your program must take the path to an abitrary `.tal` file on command line and
+
 programFile=sys.argv[1]
 
 if len(sys.argv) > 1:
@@ -24,25 +25,25 @@ if len(sys.argv) > 1:
         VV = True
     if "DBG" in sys.argv[1:]:
         DBG = True
-    
-print(WW, V, VV, DBG)
+
+with open(programFile) as f:
+    programText = f.read()
+
 #!! read the program text
 
 #todo after rest working
 
-programText = """
-|0100
-;array LDA
-;array #01 ADD LDA
-ADD
-;print JSR2
+programText2 = """
+|0100 ( every program starts at address 256 )
+
+#0006 ( put 6 on the stack as a 2-byte constant )
+#0007 ( put 7 on the stack as a 2-byte constant )
+MUL2 ( multiply the value on the top of the stack, 6, with the value below that, 7 )
+#18 DEO ( prints '*' in the terminal, because 42 is the ASCII code for '*' )
+( DEO means 'device output' and #18 is the output port for the terminal, like StdOut in Java )
+
 BRK
 
-@print
-    #18 DEO
-JMP2r
-
-@array 11 22 33
 """
 
 # These are the different types of tokens
@@ -98,11 +99,11 @@ def parseToken(tokenStr):
         return (T.MAIN,)
 #! Handle absolute padding (optional)
     elif tokenStr[0] == '|':
-        val = tokenStr[1:]
+        val = int(tokenStr[1:])
         return (T.ABSPAD,val,2)
 #! Handle relative padding
     elif tokenStr[0] == '$':
-        val = tokenStr[1:]
+        val = int(tokenStr[1:])
         return (T.RELPAD,val,1)
     elif tokenStr[0].isupper():
         # Any token string starting with an uppercase letter is considered an instruction
@@ -138,6 +139,7 @@ def store(args,sz,uxn):
 
 # LDA
 def load(args,sz, uxn):
+    print(args,sz)
     return uxn.memory[args[0]][1] # memory has tokens, stacks have values
 
 # Control operations
@@ -165,10 +167,10 @@ def pop(rs,sz,uxn):
 
 # SWP
 def swap(rs,sz,uxn):
-        b = uxn.stacks[rs].pop()
-        a = uxn.stacks[rs].pop()
-        uxn.stacks[rs].append(b)
-        uxn.stacks[rs].append(a)
+    b = uxn.stacks[rs].pop()
+    a = uxn.stacks[rs].pop()
+    uxn.stacks[rs].append(b)
+    uxn.stacks[rs].append(a)
 
 # This implementation of NIP checks if the words on the stack match the mode (short or byte)
 #! Your implementations of the other stack operations don't need to do this
@@ -222,13 +224,21 @@ def inc(args,sz,uxn):
 
 #!! Implement EQU, NEQ, LTH, GTH (similar to `ADD`)
 def equ(args,sz,uxn):
-    return args[0] == args[1]
+    if args[0] == args[1]:
+        return 1
+    return 0
 def neq(args,sz,uxn):
-    return args[0] != args[1]
+    if args[0] != args[1]:
+        return 1
+    return 0
 def lth(args,sz,uxn):
-    return args[0] < args[1]
+    if args[0] < args[1]:
+        return 1
+    return 0
 def gth(args,sz,uxn):
-    return args[0] > args[1]
+    if args[0] > args[1]:
+        return 1
+    return 0
 
 callInstr = {
 #!! Add SUB, MUL, DIV, INC; EQU, NEQ, LTH, GTH
@@ -236,6 +246,7 @@ callInstr = {
     'SUB' : (sub,2,True),
     'MUL' : (mul,2,True),
     'DIV' : (div,2,True),
+    'INC' : (inc,1,True),
     'EQU' : (equ,2,True),
     'NEQ' : (neq,2,True),
     'LTH' : (lth,2,True),
@@ -339,8 +350,9 @@ def tokeniseProgramText(programText):
 def populateTokens(tokensWithStrings):
     global TRACE
     TRACE=TRACE+1
-    return list(tokensWithStrings)
     tokens=[]
+    for token in tokensWithStrings:
+        tokens.append(token)
     return tokens
 
 # This is the first pass of the assembly process
@@ -349,7 +361,6 @@ def populateTokens(tokensWithStrings):
 def populateMemoryAndBuildSymbolTable(tokens,uxn):
     global TRACE
     TRACE=TRACE+1
-
     pc = 0
     for token in tokens:
         if token == (T.MAIN,):
@@ -374,12 +385,11 @@ def populateMemoryAndBuildSymbolTable(tokens,uxn):
 
 def resolveSymbols(uxn):
     global TRACE
-    TRACE=TRACE+1    
-    for token in uxn.memory:
-        if token[0] == T.ABSPAD or token[0] == T.RELREF:
+    TRACE=TRACE+1
+    for i, token in enumerate(uxn.memory):
+        if token[0] == T.ABSREF or token[0] == T.RELREF:
             address = uxn.symbolTable[token[1]]
-            newToken = (T.LIT, token[1], token[2])
-            uxn.memory[address] = newToken
+            uxn.memory[i] = (T.LIT, address, token[2])
 
 
 # Running the program mean setting the program counter `uxn.progCounter` to the address of the first token;
@@ -401,13 +411,13 @@ def runProgram(uxn):
         #! because the program at this point consists entirely of instructions and literals
         match token[0]:
             case T.LIT:
-                uxn.stacks[0].append(token[1])
-            case T() if token[0] in T:
+                uxn.stacks[0].append((token[1], token[2]))
+            case T.INSTR:
                 executeInstr(token,uxn)
             case _:
                 print("error")
 #!! Increment the program counter
-        uxn.progCounter = 0x1
+        uxn.progCounter += 0x1
         if DBG:
             print('(WS,RS):',uxn.stacks)
 

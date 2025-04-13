@@ -1,2 +1,17 @@
 go back and make every stack instruction take 2 bytes using sz variable. currently assumes 1byte.
 add verbose flag stuff etc..
+
+for string literals: 
+def populateTokens(tokensWithStrings):
+    global TRACE
+    TRACE += 1
+
+    tokens = []  # our final flat list of tokens
+
+    for token in tokensWithStrings:
+        if isinstance(token, list):  # e.g., '"ABC"' gives [ (T.LIT,...), (T.LIT,...), ... ]
+            tokens.extend(token)     # flatten it into the main list
+        else:
+            tokens.append(token)     # normal case: just add the tuple
+
+    return tokens
