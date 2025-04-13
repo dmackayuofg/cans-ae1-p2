@@ -1,3 +1,8 @@
+# This program is an interpreter for UXNTAL code files. It will assemble and execute the instructions of an arbitrary .tal file.
+# Usage: Run through the command line with: python .\uxntal-interpreter.py .\path\to\file.tal
+# Optional arguments: WW, V, VV, DBG 
+# Created by Drew Mackay, 2652958M.
+
 #! Comments of this style (`#!` or `#!!`) indicate code that needs completing or changing
 #! A `#!!` "should" or means "must"; `#!` means "could"
 #! "should" or "must" means you'll lose marks if you don't do it
@@ -10,7 +15,7 @@ import sys
 WW = False
 V = False # Verbose, explain a bit what happens
 VV = False # More verbose, explain in more detail what happens
-DBG = True # Debug info
+DBG = False # Debug info
 
 TRACE = 0
 
@@ -30,21 +35,6 @@ with open(programFile) as f:
     programText = f.read()
 
 #!! read the program text
-
-#todo after rest working
-
-programText2 = """
-|0100 ( every program starts at address 256 )
-
-#0006 ( put 6 on the stack as a 2-byte constant )
-#0007 ( put 7 on the stack as a 2-byte constant )
-MUL2 ( multiply the value on the top of the stack, 6, with the value below that, 7 )
-#18 DEO ( prints '*' in the terminal, because 42 is the ASCII code for '*' )
-( DEO means 'device output' and #18 is the output port for the terminal, like StdOut in Java )
-
-BRK
-
-"""
 
 # These are the different types of tokens
 class T(Enum):
@@ -139,7 +129,6 @@ def store(args,sz,uxn):
 
 # LDA
 def load(args,sz, uxn):
-    print(args,sz)
     return uxn.memory[args[0]][1] # memory has tokens, stacks have values
 
 # Control operations
@@ -214,11 +203,11 @@ def add(args,sz,uxn):
 
 #!! Implement SUB, MUL, DIV, INC (similar to `ADD`)
 def sub(args,sz,uxn):
-    return args[0] - args[1]
+    return args[1] - args[0]
 def mul(args,sz,uxn):
     return args[0] * args[1]
 def div(args,sz,uxn):
-    return args[0] // args[1]
+    return args[1] // args[0]
 def inc(args,sz,uxn):
     return args[0] + 1
 
@@ -331,6 +320,8 @@ def stripComments(programText):
     split = programText.split(" ")
     split = "\n".join(split)
     split = split.split("\n")
+    split = "\t".join(split)
+    split = split.split("\t")
     while "" in split:
         split.remove("")
     while "(" in split:
@@ -352,7 +343,10 @@ def populateTokens(tokensWithStrings):
     TRACE=TRACE+1
     tokens=[]
     for token in tokensWithStrings:
-        tokens.append(token)
+        if isinstance(token, list):
+            tokens.extend(token)
+        else:
+            tokens.append(token)
     return tokens
 
 # This is the first pass of the assembly process
