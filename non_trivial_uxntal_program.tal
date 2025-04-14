@@ -1,0 +1,23 @@
+|0100
+
+;title
+&while
+    DUP2 LDA #18 DEO
+    INC2 DUP2 LDA
+    #00 NEQ
+    ,&while JCN
+POP2
+
+#05 #00
+&loop
+    DUP DUP ROT DUP ROT ( 0550 )
+    EQU ( 05 ) ,&done JCN
+    #31 #18 DEO
+    SWP INC
+    ,&loop JMP
+&done
+
+BRK
+
+
+@title "Five 20 "Times 20 "Table 00

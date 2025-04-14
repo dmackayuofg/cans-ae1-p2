@@ -410,6 +410,7 @@ def runProgram(uxn):
                 executeInstr(token,uxn)
             case _:
                 print("error")
+                exit()
 #!! Increment the program counter
         uxn.progCounter += 0x1
         if DBG:
