@@ -8,53 +8,34 @@
     ,&while JCN
 POP2
 
-#05 #00
+#0d #00 ( 5i )
 &loop
-    DUP ROT DUP ROT ( 0550 ) 
-    EQU ( 05 ) ,&done JCN
-    #33 #18 DEO
-    SWP INC
+    DUP ROT DUP ROT ( i55i ) 
+    EQU ( i5 ) ,&done JCN
+        SWP DUP DUP ( 5iii )
+        #0A18 DEO ( 5iii )
+        #05 ;print_ascii JSR2 #2A #18 DEO ;print_ascii JSR2 ( 5ii ) #3D #18 DEO
+        #05 MUL ( 5 i i*5 ) ;print_ascii JSR2 ( 5 i )
+    INC ( 5 i+1 )
     ,&loop JMP
 &done
 
-#12 #00
-&loop2
-
-
-#0A18 DEO
-#05 ;print_ascii JSR2 #2A18 DEO #01 ;print_ascii JSR2 #3D18 DEO
-#0501 MUL ;print_ascii JSR2
-
-&done2
 BRK
 
 @title "Five 20 "Times 20 "Table 00
 
 @print_ascii
 
-DUP
-DUP
-#0a
-DIV
+    DUP ;modulo_10 JSR2
+    #30 ADD 
+    SWP #0a DIV
+    #30 ADD
+    #18 DEO #18 DEO
+    JMP2r
 
-DUP
-#0a
-MUL
+@modulo_10
 
-SWP
-POP
-SUB
-#30
-ADD
-SWP 
-
-#0a
-DIV
-
-#30
-ADD
-
-#18 DEO
-#18 DEO
-
-JMP2r
+    DUP #0a DIV
+    DUP #0a MUL
+    SWP POP SUB
+    JMP2r
