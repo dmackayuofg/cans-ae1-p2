@@ -135,11 +135,11 @@ def load(args,sz, uxn):
 # JSR
 def call(args,sz,uxn):
     # print("CALL:",args[0],uxn.progCounter)
-    uxn.stacks[1].append( (uxn.progCounter,2) )
+    uxn.stacks[1].append( (uxn.progCounter+1,2) )
     uxn.progCounter = args[0]-1
 # JMP
 def jump(args,sz,uxn):
-    uxn.progCounter = args[0]
+    uxn.progCounter = args[0]-1
 # JCN
 def condJump(args,sz,uxn):
     if args[1] == 1 :
