@@ -1,0 +1,12 @@
+|0100
+
+#05 #00
+&loop
+    DUP ROT DUP ROT ( 0550 ) 
+    EQU ( 05 ) ,&done JCN
+    #33 #18 DEO
+    SWP INC
+    ,&loop JMP
+&done
+
+BRK

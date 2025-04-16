@@ -10,14 +10,51 @@ POP2
 
 #05 #00
 &loop
-    DUP DUP ROT DUP ROT ( 0550 )
+    DUP ROT DUP ROT ( 0550 ) 
     EQU ( 05 ) ,&done JCN
-    #31 #18 DEO
+    #33 #18 DEO
     SWP INC
     ,&loop JMP
 &done
 
+#12 #00
+&loop2
+
+
+#0A18 DEO
+#05 ;print_ascii JSR2 #2A18 DEO #01 ;print_ascii JSR2 #3D18 DEO
+#0501 MUL ;print_ascii JSR2
+
+&done2
 BRK
 
-
 @title "Five 20 "Times 20 "Table 00
+
+@print_ascii
+
+DUP
+DUP
+#0a
+DIV
+
+DUP
+#0a
+MUL
+
+SWP
+POP
+SUB
+#30
+ADD
+SWP 
+
+#0a
+DIV
+
+#30
+ADD
+
+#18 DEO
+#18 DEO
+
+JMP2r

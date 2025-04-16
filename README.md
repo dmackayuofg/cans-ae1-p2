@@ -5,7 +5,7 @@ linkcolor: blue
 
 ## Part 2: Uxn interpreter in Python
 
-The default Uxn system consists of an assembler (`uxnasm` or `drifblim.rom`) and a VM (`uxnemu` and `uxncli` on Linux/Macos; `uxnemu.exe` and `uxncli.exe` or `Uxn32.exe` om Windows). The aim of this exercise is to create an interpreter, a Python program that will interpret Uxntal code and run it. Revisit your notes on how an assembler works, as you will need to follow the same general approach:
+The default Uxn system consists of an assembler (`uxnasm` or `drifblim.rom`) and a VM (`uxnemu` and `uxncli` on Linux/Macos; `uxnemu.exe` and `uxncli.exe` or `Uxn32.exe` on Windows). The aim of this exercise is to create an interpreter, a Python program that will interpret Uxntal code and run it. Revisit your notes on how an assembler works, as you will need to follow the same general approach:
 
 - First you tokenise the code, i.e. split the program text into meaningful tokens.
 - In a first pass over the tokenised code, you look for all symbol declarations (i.e. labels for variables and subroutines) and map them to addresses
