@@ -172,3 +172,5 @@ cython_debug/
 
 # project specific
 test.py
+*.rom
+*.sym
