@@ -8,15 +8,15 @@
     ,&while JCN
 POP2
 
-#0d #00 ( 5i )
+#0d #00
 &loop
-    DUP ROT DUP ROT ( i55i ) 
-    EQU ( i5 ) ,&done JCN
-        SWP DUP DUP ( 5iii )
-        #0a #18 DEO ( 5iii )
-        #05 ;print_ascii JSR2 #2a #18 DEO ;print_ascii JSR2 ( 5ii ) #3d #18 DEO
-        #05 MUL ( 5 i i*5 ) ;print_ascii JSR2 ( 5 i )
-    INC ( 5 i+1 )
+    DUP ROT DUP ROT
+    EQU ,&done JCN
+        SWP DUP DUP 
+        #0a #18 DEO 
+        #05 ;print_ascii JSR2 #2a #18 DEO ;print_ascii JSR2  #3d #18 DEO
+        #05 MUL  ;print_ascii JSR2 
+    INC 
     ,&loop JMP
 &done
 
