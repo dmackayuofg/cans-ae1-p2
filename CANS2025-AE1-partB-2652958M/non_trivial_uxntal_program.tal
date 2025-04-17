@@ -1,0 +1,41 @@
+|0100
+
+;title
+&while
+    DUP2 LDA #18 DEO
+    INC2 DUP2 LDA
+    #00 NEQ
+    ,&while JCN
+POP2
+
+#0d #00 ( 5i )
+&loop
+    DUP ROT DUP ROT ( i55i ) 
+    EQU ( i5 ) ,&done JCN
+        SWP DUP DUP ( 5iii )
+        #0a #18 DEO ( 5iii )
+        #05 ;print_ascii JSR2 #2a #18 DEO ;print_ascii JSR2 ( 5ii ) #3d #18 DEO
+        #05 MUL ( 5 i i*5 ) ;print_ascii JSR2 ( 5 i )
+    INC ( 5 i+1 )
+    ,&loop JMP
+&done
+
+BRK
+
+@title "Five 20 "Times 20 "Table 00
+
+@print_ascii
+
+    DUP ;modulo_10 JSR2
+    #30 ADD 
+    SWP #0a DIV
+    #30 ADD
+    #18 DEO #18 DEO
+    JMP2r
+
+@modulo_10
+
+    DUP #0a DIV
+    DUP #0a MUL
+    SWP POP SUB
+    JMP2r
